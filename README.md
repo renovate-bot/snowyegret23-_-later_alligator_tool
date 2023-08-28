@@ -16,13 +16,15 @@ UnityPy 모듈 (cmd - ‘pip install unitypy’ 명령어 실행)
 
 main.py를 텍스트 에디터로 연 후, 아래 부분을 원하는 대로 변경한 다음 실행.
 
-\> if \_\_name\_\_ == "\_\_main\_\_":  
-\>     extract\_bundles()  
-\>     # import\_bundles()  
-\>     # extract\_test("./2.edited\_bundle/scenes\_scenes\_artdealer.bundle")  
-\>     # extract\_test("./2.edited\_bundle/scenes\_scenes\_grilldad.bundle")  
-\>     # extract\_test("./2.edited\_bundle/scenes\_scenes\_locationintro.bundle")  
-\>     pass
+```python
+if __name__ == "__main__":
+    extract_bundles()
+    # import_bundles()
+    # extract_test("./2.edited_bundle/scenes_scenes_artdealer.bundle")
+    # extract_test("./2.edited_bundle/scenes_scenes_grilldad.bundle")
+    # extract_test("./2.edited_bundle/scenes_scenes_locationintro.bundle")
+    pass
+```
 
 *   extract\_bundles() - \[1.original\_bundle\] 폴더 내 .bundle 파일들을 읽어, “storyText” 필드를 긁어와 CSV 파일로 저장합니다. (optional parameter - 저장될 CSV 이름)
 *   import\_bundles() - CSV 파일의 filename, itemid를 고유한 값으로 하여 텍스트를 번역된 텍스트로 교체하고, 수정된 .bundle 파일을 \[2.edited\_bundle\]에 저장합니다. (optional parameter - 불러올 CSV 이름)
