@@ -1,6 +1,18 @@
 ## lateraligator\_text\_tool
 
-later aligator 텍스트 교체 툴.
+later aligator 텍스트 교체 스크립트.
+
+.bundle 파일 내 Monobehavior를 파싱하여 텍스트를 CSV로 저장한 후, 이후 번역문을 적용시킬 수 있는 스크립트입니다.
+
+.bundle 파일을 직접 수정하여 외부 도구가 필요하지 않고, 수정 된 bundle파일만 출력되므로 배포 시간을 단축시킬 수 있습니다.
+
+### 요구사항
+
+Python (테스트 환경: 3.11.4)
+
+UnityPy 모듈 (cmd - ‘pip install unitypy’ 명령어 실행)
+
+### 사용법
 
 main.py를 텍스트 에디터로 연 후, 아래 부분을 원하는 대로 변경한 다음 실행.
 
