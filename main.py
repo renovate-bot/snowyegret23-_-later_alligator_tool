@@ -26,36 +26,23 @@ def extract_bundles(csv_name="storyText.csv"):
         extract_text(fn, csv_name)
 
 
-def extract_noneCheck(tree: dict):
-    if tree.get("itemId") is None:
-        return None, None, None
-    if tree.get("character") is None:
-        return None, None, None
-    if tree.get("character").get("m_PathID") is None:
-        return None, None, None
-    if tree.get("storyText") is None:
-        return None, None, None
-    return (
-        tree.get("itemId"),
-        tree.get("character").get("m_PathID"),
-        sanitize_text(tree.get("storyText")),
-    )
-
-
 def extract_text(fn, csv_name):
     clean_fn = os.path.splitext(fn)[0]
     text_lst = []
     env = UnityPy.load(f"./1.original_bundle/{fn}")
     for obj in env.objects:
         # fmt: off
-        # if (obj.type.name == "MonoBehaviour" and obj.type_id == 35 and obj.serialized_type.nodes):
         if (obj.type.name == "MonoBehaviour" and obj.serialized_type.nodes):
             tree: dict = obj.read_typetree()
-            # with open(f"./3.export_jsons/{clean_fn}-{obj.path_id}-{obj.type_id}-{name}.json", "w", encoding="utf-8") as f:
-            #     json.dump(tree, f, ensure_ascii=False, indent=4)
-            item_id, character_id, text = extract_noneCheck(tree)
-            if item_id is None:
+            if tree.get('storyText') == None:
                 continue
+            if tree.get('itemId') == None:
+                continue
+            if tree.get('character') == None:
+                continue
+            if tree.get('character').get('m_PathID') == None:
+                continue
+            item_id, character_id, text = tree.get('itemId'), tree.get('character').get('m_PathID'), sanitize_text(tree.get('storyText'))
             text_lst.append([clean_fn, item_id, character_id, text, ""])
     sorted_lst = sorted(text_lst, key=lambda x: x[1])
     with open(csv_name, "a", encoding="utf-8", newline="") as f:
@@ -109,16 +96,6 @@ def import_bundles(csv_name="storyText.csv"):
         import_text(fn, translate_dict)
 
 
-def import_noneCheck(clean_fn: str, translate_dict, tree: dict):
-    if clean_fn not in translate_dict.keys():
-        return None
-    if tree.get("itemId") is None:
-        return None
-    if str(tree.get("itemId")) not in translate_dict[clean_fn].keys():
-        return None
-    return str(tree.get("itemId"))
-
-
 def import_text(fn, translate_dict):
     clean_fn = os.path.splitext(os.path.basename(fn))[0]
     count = 0
@@ -126,20 +103,24 @@ def import_text(fn, translate_dict):
     env = UnityPy.load(f"./1.original_bundle/{fn}")
     for obj in env.objects:
         # fmt: off
-        # if (obj.type.name == "MonoBehaviour" and obj.type_id == 35 and obj.serialized_type.nodes):
         if (obj.type.name == "MonoBehaviour" and obj.serialized_type.nodes):
             tree = obj.read_typetree()
-            item_id = import_noneCheck(clean_fn, translate_dict, tree)
-            if item_id is None:
+            if tree.get('storyText') == None:
                 continue
+            if tree.get('itemId') == None:
+                continue
+            if tree.get('character') == None:
+                continue
+            if tree.get('character').get('m_PathID') == None:
+                continue
+            item_id = str(tree.get('itemId'))
             if translate_dict[clean_fn][item_id]["dst"] == "":
-                translated = restore_text(translate_dict[clean_fn][item_id]["src"])
-            else:
-                count += 1
-                if count == 1:
-                    print(f" - {clean_fn} 번들 작업 중...", end="")
-                translated = restore_text(translate_dict[clean_fn][item_id]["dst"])
-                translate_count += 1
+                continue
+            count += 1
+            if count == 1:
+                print(f" - {clean_fn} 번들 작업 중...", end="")
+            translated = restore_text(translate_dict[clean_fn][item_id]["dst"])
+            translate_count += 1
             tree["storyText"] = translated
             obj.save_typetree(tree)
     if count != 0:
